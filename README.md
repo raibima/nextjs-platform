@@ -16,7 +16,9 @@ A modern, extensible Next.js starter platform with authentication, a comprehensi
 - **Database**: Integrated with [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL for type-safe database access.
 - **Planned**:
   - Internationalization (i18n)
-  - AI-powered features
+  - AI SDK
+  - Unit test
+  - E2E browser test
 
 ---
 
