@@ -42,10 +42,14 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
       try {
         if (isEditing) {
           await updateGlobalAction(key, value);
-          toast.success('Global updated successfully');
+          toast.success('Global updated successfully', {
+            id: 'globals-toast-update-success',
+          });
         } else {
           await addGlobalAction(key, value);
-          toast.success('Global added successfully');
+          toast.success('Global added successfully', {
+            id: 'globals-toast-add-success',
+          });
         }
         setOpen(false);
         if (onClose) onClose();
@@ -56,6 +60,11 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : 'An error occurred',
+          {
+            id: isEditing
+              ? 'globals-toast-update-error'
+              : 'globals-toast-add-error',
+          },
         );
       }
     });
@@ -79,25 +88,37 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild data-testid="globals-form-trigger">
         {trigger || (
-          <Button>
+          <Button data-testid="globals-button-add">
             <Plus className="h-4 w-4 mr-2" />
             Add Global
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent
+        data-testid={
+          isEditing ? 'globals-form-edit-dialog' : 'globals-form-add-dialog'
+        }
+        className="sm:max-w-[425px]"
+      >
+        <DialogHeader data-testid="globals-form-header">
+          <DialogTitle data-testid="globals-form-title">
             {isEditing ? 'Edit Global' : 'Add New Global'}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="key">Key</Label>
+        <form
+          data-testid="globals-form"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+          <div data-testid="globals-form-key-field" className="space-y-2">
+            <Label htmlFor="key" data-testid="globals-form-key-label">
+              Key
+            </Label>
             <Input
               id="key"
+              data-testid="globals-form-key-input"
               value={key}
               onChange={(e) => setKey(e.target.value)}
               placeholder="Enter key"
@@ -105,10 +126,13 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="value">Value</Label>
+          <div data-testid="globals-form-value-field" className="space-y-2">
+            <Label htmlFor="value" data-testid="globals-form-value-label">
+              Value
+            </Label>
             <Input
               id="value"
+              data-testid="globals-form-value-input"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="Enter value"
@@ -116,17 +140,32 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
               required
             />
           </div>
-          <div className="flex justify-end space-x-2">
+          <div
+            data-testid="globals-form-actions"
+            className="flex justify-end space-x-2"
+          >
             <Button
               type="button"
               variant="outline"
+              data-testid="globals-form-button-cancel"
               onClick={handleClose}
               disabled={isPending}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? 'Saving...' : isEditing ? 'Update' : 'Add'}
+            <Button
+              type="submit"
+              data-testid="globals-form-button-submit"
+              disabled={isPending}
+              aria-busy={isPending}
+            >
+              <span
+                data-testid={
+                  isPending ? 'globals-button-saving' : 'globals-button-ready'
+                }
+              >
+                {isPending ? 'Saving...' : isEditing ? 'Update' : 'Add'}
+              </span>
             </Button>
           </div>
         </form>

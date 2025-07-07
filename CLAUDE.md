@@ -76,7 +76,84 @@ Required environment variables:
 
 ## Testing
 
+### E2E Testing Setup
+
+The application is fully prepared for end-to-end testing with **Playwright**.
+
+#### Test ID Architecture
+
+- **Naming Convention**: `[context]-[element-type]-[identifier]`
+- **Dynamic IDs**: Support for parameterized identifiers (e.g., `globals-table-row-${key}`)
+- **Centralized Management**: All test IDs defined in `src/utils/test-helpers.ts`
+
+#### Key Test IDs
+
+**Authentication Flow:**
+
+- `auth-signed-out-container` - Signed out state
+- `auth-signed-in-container` - Signed in state
+- `auth-sign-in-button` - Sign in button
+- `auth-sign-up-button` - Sign up button
+- `auth-user-button` - User profile button
+
+**Globals Module:**
+
+- `globals-page-container` - Main page container
+- `globals-button-add` - Add global button
+- `globals-table-container` - Data table
+- `globals-table-row-{key}` - Specific table row
+- `globals-button-edit-{key}` - Edit button for specific global
+- `globals-button-delete-{key}` - Delete button for specific global
+- `globals-form-add-dialog` - Add form dialog
+- `globals-form-edit-dialog` - Edit form dialog
+- `globals-form-key-input` - Key input field
+- `globals-form-value-input` - Value input field
+- `globals-form-button-submit` - Form submit button
+
+**Toast Notifications:**
+
+- `globals-toast-add-success` - Success adding global
+- `globals-toast-add-error` - Error adding global
+- `globals-toast-update-success` - Success updating global
+- `globals-toast-delete-success` - Success deleting global
+- `globals-toast-delete-error` - Error deleting global
+
+#### Test Helper Utilities
+
+Use the test helper functions for consistent test development:
+
+```typescript
+import {testIds, selectors, testPatterns} from '@/utils/test-helpers';
+
+// Basic usage
+await page.click(selectors.byTestId(testIds.globals.buttonAdd));
+
+// Dynamic IDs
+await page.click(selectors.byTestId(testIds.globals.buttonEdit('myKey')));
+
+// Wait for toast
+await page.waitForSelector(testPatterns.waitForToast('success', 'add'));
+```
+
+#### Playwright Integration
+
+To set up Playwright testing:
+
+```bash
+npm init playwright@latest
+```
+
+The application includes comprehensive test IDs for:
+
+- Authentication flows
+- CRUD operations (Create, Read, Update, Delete)
+- Form interactions and validation
+- Loading states and error handling
+- Toast notification verification
+
+### Unit Testing
+
 Currently planned but not implemented:
 
-- Unit tests
-- E2E browser tests
+- Component unit tests
+- Utility function tests

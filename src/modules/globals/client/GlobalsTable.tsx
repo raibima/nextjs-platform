@@ -31,32 +31,56 @@ export function GlobalsTable({globals, onEdit}: GlobalsTableProps) {
     startTransition(async () => {
       try {
         await deleteGlobalAction(key);
-        toast.success('Global deleted successfully');
+        toast.success('Global deleted successfully', {
+          id: 'globals-toast-delete-success',
+        });
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : 'Failed to delete global',
+          {
+            id: 'globals-toast-delete-error',
+          },
         );
       }
     });
   };
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Key</TableHead>
-          <TableHead>Value</TableHead>
-          <TableHead className="w-[100px]">Actions</TableHead>
+    <Table data-testid="globals-table-container">
+      <TableHeader data-testid="globals-table-header">
+        <TableRow data-testid="globals-table-header-row">
+          <TableHead data-testid="globals-table-head-key">Key</TableHead>
+          <TableHead data-testid="globals-table-head-value">Value</TableHead>
+          <TableHead
+            data-testid="globals-table-head-actions"
+            className="w-[100px]"
+          >
+            Actions
+          </TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
+      <TableBody data-testid="globals-table-body">
         {globals.map((global) => (
-          <TableRow key={global.key}>
-            <TableCell className="font-medium">{global.key}</TableCell>
-            <TableCell>{global.value}</TableCell>
-            <TableCell>
-              <div className="flex gap-2">
+          <TableRow
+            key={global.key}
+            data-testid={`globals-table-row-${global.key}`}
+          >
+            <TableCell
+              data-testid={`globals-table-cell-key-${global.key}`}
+              className="font-medium"
+            >
+              {global.key}
+            </TableCell>
+            <TableCell data-testid={`globals-table-cell-value-${global.key}`}>
+              {global.value}
+            </TableCell>
+            <TableCell data-testid={`globals-table-cell-actions-${global.key}`}>
+              <div
+                data-testid={`globals-table-actions-${global.key}`}
+                className="flex gap-2"
+              >
                 <Button
+                  data-testid={`globals-button-edit-${global.key}`}
                   variant="outline"
                   size="sm"
                   onClick={() => onEdit(global)}
@@ -65,6 +89,7 @@ export function GlobalsTable({globals, onEdit}: GlobalsTableProps) {
                   <Edit className="h-4 w-4" />
                 </Button>
                 <Button
+                  data-testid={`globals-button-delete-${global.key}`}
                   variant="outline"
                   size="sm"
                   onClick={() => handleDelete(global.key)}

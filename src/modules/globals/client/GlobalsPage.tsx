@@ -25,16 +25,27 @@ export function GlobalsPage({initialGlobals}: GlobalsPageProps) {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Globals</h1>
+    <div
+      data-testid="globals-page-container"
+      className="container mx-auto py-8"
+    >
+      <div
+        data-testid="globals-page-header"
+        className="flex justify-between items-center mb-6"
+      >
+        <h1 data-testid="globals-page-title" className="text-3xl font-bold">
+          Globals
+        </h1>
         <GlobalForm />
       </div>
 
       {initialGlobals.length > 0 ? (
         <GlobalsTable globals={initialGlobals} onEdit={handleEdit} />
       ) : (
-        <div className="text-center py-8 text-muted-foreground">
+        <div
+          data-testid="globals-empty-state"
+          className="text-center py-8 text-muted-foreground"
+        >
           No globals found. Add one to get started.
         </div>
       )}

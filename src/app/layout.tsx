@@ -35,25 +35,35 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" data-testid="app-root">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
+          <header
+            data-testid="app-header"
+            className="flex justify-end items-center p-4 gap-4 h-16"
+          >
             <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
-                </button>
-              </SignUpButton>
+              <div data-testid="auth-signed-out-container">
+                <SignInButton data-testid="auth-sign-in-button" />
+                <SignUpButton data-testid="auth-sign-up-trigger">
+                  <button
+                    data-testid="auth-sign-up-button"
+                    className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer"
+                  >
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </div>
             </SignedOut>
             <SignedIn>
-              <UserButton />
+              <div data-testid="auth-signed-in-container">
+                <UserButton data-testid="auth-user-button" />
+              </div>
             </SignedIn>
           </header>
-          {children}
-          <Toaster />
+          <main data-testid="app-main-content">{children}</main>
+          <Toaster data-testid="app-toaster" />
         </body>
       </html>
     </ClerkProvider>
