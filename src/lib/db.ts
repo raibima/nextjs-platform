@@ -1,10 +1,4 @@
 import {drizzle} from 'drizzle-orm/node-postgres';
-import {pgTable, text} from 'drizzle-orm/pg-core';
-
-export const globals = pgTable('globals', {
-  key: text('key').primaryKey(),
-  value: text('value').notNull(),
-});
 
 const db = drizzle(process.env.DATABASE_URL as string);
 
