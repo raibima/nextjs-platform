@@ -15,9 +15,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Database Commands
 
-- `bunx drizzle-kit generate` - Generate database migrations
-- `bunx drizzle-kit push` - Push schema changes to database
+- `bunx drizzle-kit push` - Push schema changes directly to database
 - `bunx drizzle-kit studio` - Open Drizzle Studio for database management
+
+### Testing Commands
+
+- `bunx playwright test` - Run all E2E tests
+- `bunx playwright test --ui` - Run tests with Playwright UI
+- `bunx playwright test e2e/sample-crud.spec.ts` - Run specific test file
+- `bunx playwright install` - Install Playwright browsers (first time only)
+- `bunx playwright codegen` - Generate tests with Playwright codegen
 
 ## Project Architecture
 
@@ -96,7 +103,7 @@ The application is fully prepared for end-to-end testing with **Playwright**.
 - `auth-sign-up-button` - Sign up button
 - `auth-user-button` - User profile button
 
-**Globals Module:**
+**Sample CRUD Module:**
 
 - `globals-page-container` - Main page container
 - `globals-button-add` - Add global button
@@ -137,11 +144,7 @@ await page.waitForSelector(testPatterns.waitForToast('success', 'add'));
 
 #### Playwright Integration
 
-To set up Playwright testing:
-
-```bash
-npm init playwright@latest
-```
+Playwright is already configured in this project. The configuration is in `playwright.config.ts`.
 
 The application includes comprehensive test IDs for:
 
@@ -151,9 +154,86 @@ The application includes comprehensive test IDs for:
 - Loading states and error handling
 - Toast notification verification
 
+#### Running Tests
+
+```bash
+# Run all tests
+bunx playwright test
+
+# Run tests with UI mode
+bunx playwright test --ui
+
+# Run specific test file
+bunx playwright test e2e/sample-crud.spec.ts
+
+# Generate test code
+bunx playwright codegen http://localhost:3000
+```
+
+#### Test Development Best Practices
+
+1. **Use centralized test IDs** - All test IDs are defined in `e2e/test-helpers.ts`
+2. **Follow naming convention** - `[context]-[element-type]-[identifier]`
+3. **Use helper functions** - Leverage `selectors.byTestId()` and other utilities
+4. **Test client-side navigation** - Verify no full page refreshes occur during SPA interactions
+5. **Handle dynamic content** - Use unique timestamps for test data to avoid conflicts
+
 ### Unit Testing
 
 Currently planned but not implemented:
 
 - Component unit tests
 - Utility function tests
+
+## Development Workflow
+
+### Creating New Modules
+
+When creating new feature modules, follow this pattern:
+
+1. **Create module directory**: `src/modules/[module-name]/`
+2. **Add model layer**: `src/modules/[module-name]/model/[Model].ts`
+3. **Add action layer**: `src/modules/[module-name]/action/[ModuleName]Action.ts`
+4. **Add client layer**: `src/modules/[module-name]/client/[ComponentName].tsx`
+5. **Add page**: `src/app/[module-name]/page.tsx`
+6. **Add tests**: `e2e/[module-name].spec.ts`
+7. **Update test IDs**: Add new test IDs to `e2e/test-helpers.ts`
+
+### Example: Sample CRUD Module
+
+The `sample-crud` module demonstrates the complete pattern:
+
+```
+src/modules/sample-crud/
+├── model/
+│   └── Global.ts           # Database operations
+├── action/
+│   └── CRUDPageAction.ts   # Server actions
+└── client/
+    ├── CRUDPage.tsx        # Main page component
+    ├── CRUDForm.tsx        # Form component
+    └── CRUDTable.tsx       # Table component
+```
+
+### Database Schema Changes
+
+1. **Update schema**: Modify `src/core/db-schema.ts`
+2. **Push changes**: Run `bunx drizzle-kit push` to apply schema changes directly
+3. **Update models**: Update relevant model files in `src/modules/*/model/`
+4. **Update types**: Ensure TypeScript types are updated
+
+### Adding Test IDs
+
+1. **Define test IDs**: Add new test IDs to `e2e/test-helpers.ts`
+2. **Follow convention**: Use `[context]-[element-type]-[identifier]` format
+3. **Support dynamic IDs**: Create functions for parameterized identifiers
+4. **Add to components**: Include `data-testid` attributes in components
+5. **Write tests**: Create corresponding test files in `e2e/`
+
+## Important Notes
+
+- **Always run lint and format** before committing changes
+- **Use TypeScript strictly** - no `any` types without good reason
+- **Follow the module pattern** - keep features organized in their own modules
+- **Test everything** - add test IDs to all interactive elements
+- **Keep database operations in models** - don't put database calls in components or actions directly

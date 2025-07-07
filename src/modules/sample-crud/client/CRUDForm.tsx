@@ -13,21 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/dialog';
-import {addGlobalAction, updateGlobalAction} from '../action/GlobalPageAction';
+import {addGlobalAction, updateGlobalAction} from '../action/CRUDPageAction';
 import {Plus} from 'lucide-react';
+import {GlobalDto} from '../model/Global';
 
-interface GlobalDto {
-  key: string;
-  value: string;
-}
-
-interface GlobalFormProps {
+interface CRUDFormProps {
   global?: GlobalDto;
   onClose?: () => void;
   trigger?: React.ReactNode;
 }
 
-export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
+export function CRUDForm({global, onClose, trigger}: CRUDFormProps) {
   const [open, setOpen] = useState(Boolean(global));
   const [key, setKey] = useState(global?.key || '');
   const [value, setValue] = useState(global?.value || '');

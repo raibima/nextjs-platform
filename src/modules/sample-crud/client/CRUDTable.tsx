@@ -10,21 +10,17 @@ import {
 } from '@/components/table';
 import {Button} from '@/components/button';
 import {Trash2, Edit} from 'lucide-react';
-import {deleteGlobalAction} from '../action/GlobalPageAction';
+import {deleteGlobalAction} from '../action/CRUDPageAction';
 import {useTransition} from 'react';
 import {toast} from 'sonner';
+import {GlobalDto} from '../model/Global';
 
-interface GlobalDto {
-  key: string;
-  value: string;
-}
-
-interface GlobalsTableProps {
+interface CRUDTableProps {
   globals: GlobalDto[];
   onEdit: (global: GlobalDto) => void;
 }
 
-export function GlobalsTable({globals, onEdit}: GlobalsTableProps) {
+export function CRUDTable({globals, onEdit}: CRUDTableProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = (key: string) => {

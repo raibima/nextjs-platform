@@ -2,7 +2,7 @@ import {db} from '@/core/db';
 import {globals} from '@/core/db-schema';
 import {eq} from 'drizzle-orm';
 
-interface GlobalDto {
+export interface GlobalDto {
   key: string;
   value: string;
 }

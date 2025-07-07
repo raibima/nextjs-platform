@@ -1,19 +1,15 @@
 'use client';
 
 import {useState} from 'react';
-import {GlobalsTable} from './GlobalsTable';
-import {GlobalForm} from './GlobalForm';
+import {CRUDTable} from './CRUDTable';
+import {CRUDForm} from './CRUDForm';
+import {GlobalDto} from '../model/Global';
 
-interface GlobalDto {
-  key: string;
-  value: string;
-}
-
-interface GlobalsPageProps {
+interface CRUDPageProps {
   initialGlobals: GlobalDto[];
 }
 
-export function GlobalsPage({initialGlobals}: GlobalsPageProps) {
+export function CRUDPage({initialGlobals}: CRUDPageProps) {
   const [editingGlobal, setEditingGlobal] = useState<GlobalDto | null>(null);
 
   const handleEdit = (global: GlobalDto) => {
@@ -36,11 +32,11 @@ export function GlobalsPage({initialGlobals}: GlobalsPageProps) {
         <h1 data-testid="globals-page-title" className="text-3xl font-bold">
           Globals
         </h1>
-        <GlobalForm />
+        <CRUDForm />
       </div>
 
       {initialGlobals.length > 0 ? (
-        <GlobalsTable globals={initialGlobals} onEdit={handleEdit} />
+        <CRUDTable globals={initialGlobals} onEdit={handleEdit} />
       ) : (
         <div
           data-testid="globals-empty-state"
@@ -51,7 +47,7 @@ export function GlobalsPage({initialGlobals}: GlobalsPageProps) {
       )}
 
       {editingGlobal && (
-        <GlobalForm global={editingGlobal} onClose={handleCloseEdit} />
+        <CRUDForm global={editingGlobal} onClose={handleCloseEdit} />
       )}
     </div>
   );

@@ -14,11 +14,12 @@ A modern, extensible Next.js starter platform with authentication, a comprehensi
 - **Custom Hooks & Utilities**: Includes `useIsMobile` for responsive logic and `cn` for className merging.
 - **Modern React**: Uses React 19 features and best practices.
 - **Database**: Integrated with [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL for type-safe database access.
+- **Module Architecture**: Domain-driven design with separate model, action, and client layers.
+- **E2E Testing**: Comprehensive end-to-end testing with Playwright and centralized test ID management.
 - **Planned**:
   - Internationalization (i18n)
   - AI SDK
   - Unit test
-  - E2E browser test
 
 ---
 
@@ -61,20 +62,19 @@ bun run format    # Format code with Prettier
 
 This project uses [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL for type-safe database access.
 
-- **Schema location**: Database schema is defined in [`src/lib/db.ts`](src/lib/db.ts).
+- **Schema location**: Database schema is defined in [`src/core/db-schema.ts`](src/core/db-schema.ts).
+- **Database connection**: Connection setup in [`src/core/db.ts`](src/core/db.ts).
 - **Drizzle config**: See [`drizzle.config.ts`](drizzle.config.ts) for Drizzle Kit configuration.
 
-### Running migrations
+### Applying Schema Changes
 
-1. Generate migrations (after editing your schema):
+1. After editing your schema, push changes directly to your database:
    ```sh
-   bunx drizzle-kit generate:pg
-   # or npx drizzle-kit generate:pg
+   bunx drizzle-kit push
    ```
-2. Apply migrations to your database:
+2. Open Drizzle Studio for database management:
    ```sh
-   bunx drizzle-kit push:pg
-   # or npx drizzle-kit push:pg
+   bunx drizzle-kit studio
    ```
 
 > Ensure your `DATABASE_URL` is set in `.env.local` before running these commands.
@@ -97,6 +97,8 @@ This project uses [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL for t
 - [Tailwind CSS](https://tailwindcss.com/)
 - [shadcn/ui](https://ui.shadcn.com/), [Radix UI](https://www.radix-ui.com/)
 - [Clerk](https://clerk.com/) (authentication)
+- [Drizzle ORM](https://orm.drizzle.team/) (database)
+- [Playwright](https://playwright.dev/) (E2E testing)
 - [Zod](https://zod.dev/) (validation)
 - [Prettier](https://prettier.io/), [ESLint](https://eslint.org/), [Husky](https://typicode.github.io/husky/)
 
@@ -107,15 +109,95 @@ This project uses [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL for t
 ```
 nextjs-platform/
 ├── src/
-│   ├── app/           # Next.js app directory (entry, layout, global styles)
-│   ├── components/
-│   │   └── ui/        # Reusable UI components
-│   ├── hooks/         # Custom React hooks
-│   └── lib/           # Utility functions
-├── public/            # Static assets
-├── .husky/            # Git hooks
-├── .eslintrc, .prettierrc, etc. # Config files
+│   ├── app/           # Next.js app directory (pages, layouts, global styles)
+│   ├── components/    # shadcn/ui components and custom hooks
+│   │   ├── hooks/     # Custom React hooks (useIsMobile, etc.)
+│   │   └── lib/       # Utility functions (cn, etc.)
+│   ├── core/          # Database configuration and schemas
+│   │   ├── db.ts      # Database connection setup
+│   │   └── db-schema.ts # Database table definitions
+│   ├── modules/       # Feature modules (domain-driven architecture)
+│   │   └── sample-crud/
+│   │       ├── action/    # Server actions
+│   │       ├── client/    # Client components
+│   │       └── model/     # Database models
+│   └── middleware.ts  # Authentication middleware
+├── e2e/              # End-to-end tests
+│   ├── test-helpers.ts   # Test utilities and test IDs
+│   └── *.spec.ts        # Playwright test files
+├── public/           # Static assets
+├── drizzle/          # Database migrations
+├── playwright.config.ts # Playwright configuration
 └── ...
+```
+
+---
+
+## Module Architecture
+
+This project follows a domain-driven architecture where features are organized into modules:
+
+### Module Structure
+
+Each module in `src/modules/` contains:
+
+- **`model/`**: Database operations and business logic
+- **`action/`**: Server actions for Next.js App Router
+- **`client/`**: Client-side components and hooks
+
+### Example Module
+
+```
+src/modules/sample-crud/
+├── action/
+│   └── CRUDPageAction.ts    # Server actions for CRUD operations
+├── client/
+│   ├── CRUDForm.tsx         # Form components
+│   ├── CRUDPage.tsx         # Main page component
+│   └── CRUDTable.tsx        # Table components
+└── model/
+    └── Global.ts            # Database model
+```
+
+---
+
+## Testing
+
+### End-to-End Testing
+
+This project includes comprehensive E2E testing with Playwright:
+
+- **Test IDs**: Centralized test ID management in `e2e/test-helpers.ts`
+- **Naming Convention**: `[context]-[element-type]-[identifier]`
+- **Dynamic IDs**: Support for parameterized identifiers
+- **Utilities**: Helper functions for consistent test development
+
+#### Running E2E Tests
+
+```bash
+# Install Playwright browsers (first time only)
+bunx playwright install
+
+# Run tests
+bunx playwright test
+
+# Run tests with UI
+bunx playwright test --ui
+
+# Run specific test file
+bunx playwright test e2e/sample-crud.spec.ts
+```
+
+#### Test ID Examples
+
+```typescript
+// Static test IDs
+testIds.globals.buttonAdd; // 'globals-button-add'
+testIds.auth.signInButton; // 'auth-sign-in-button'
+
+// Dynamic test IDs
+testIds.globals.tableRow('myKey'); // 'globals-table-row-myKey'
+testIds.globals.buttonEdit('myKey'); // 'globals-button-edit-myKey'
 ```
 
 ---

@@ -7,10 +7,10 @@ declare global {
   }
 }
 
-test('globals page can load, user can add a global', async ({page}) => {
+test('sample-crud page can load, user can add a global', async ({page}) => {
   const time = Date.now();
 
-  await page.goto(pathname('/globals'));
+  await page.goto(pathname('/sample-crud'));
 
   // Wait for page to load
   await expect(
