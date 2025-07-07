@@ -11,7 +11,6 @@ A modern, extensible Next.js starter platform with authentication, a comprehensi
 - **Prettier + Husky**: Enforced code style and pre-commit hooks for consistent formatting and linting.
 - **TypeScript**: Full type safety across the codebase.
 - **Tailwind CSS**: Utility-first styling with custom themes and animations.
-- **Custom Hooks & Utilities**: Includes `useIsMobile` for responsive logic and `cn` for className merging.
 - **Modern React**: Uses React 19 features and best practices.
 - **Database**: Integrated with [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL for type-safe database access.
 - **Module Architecture**: Domain-driven design with separate model, action, and client layers.
