@@ -33,13 +33,21 @@ bun install # or npm install / yarn install
 
 ### 2. Set up environment variables
 
-Create a `.env.local` file in the project root and add your Postgres connection string:
+Create a `.env.local` file in the project root. See `.env.example` for reference:
+
+```bash
+cp .env.example .env.local
+```
+
+Then fill in the required values:
 
 ```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
 DATABASE_URL=postgres://user:password@localhost:5432/mydb
 ```
 
-Replace `user`, `password`, `localhost`, and `mydb` with your Postgres credentials.
+Replace with your actual Clerk keys and Postgres credentials.
 
 ### 3. Run the development server
 
