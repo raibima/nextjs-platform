@@ -1,6 +1,7 @@
 'use client';
 
 import {useState, useTransition} from 'react';
+import {useRouter} from 'next/navigation';
 import {Button} from '@/components/button';
 import {Input} from '@/components/input';
 import {Label} from '@/components/label';
@@ -31,7 +32,7 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
   const [key, setKey] = useState(global?.key || '');
   const [value, setValue] = useState(global?.value || '');
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   const isEditing = Boolean(global);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -43,14 +44,15 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
         if (isEditing) {
           await updateGlobalAction(key, value);
           toast.success('Global updated successfully', {
-            id: 'globals-toast-update-success',
+            className: 'globals-toast-update-success',
           });
         } else {
           await addGlobalAction(key, value);
           toast.success('Global added successfully', {
-            id: 'globals-toast-add-success',
+            className: 'globals-toast-add-success',
           });
         }
+        router.refresh();
         setOpen(false);
         if (onClose) onClose();
         if (!isEditing) {
@@ -61,7 +63,7 @@ export function GlobalForm({global, onClose, trigger}: GlobalFormProps) {
         toast.error(
           error instanceof Error ? error.message : 'An error occurred',
           {
-            id: isEditing
+            className: isEditing
               ? 'globals-toast-update-error'
               : 'globals-toast-add-error',
           },

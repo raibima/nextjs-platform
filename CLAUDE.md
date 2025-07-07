@@ -84,7 +84,7 @@ The application is fully prepared for end-to-end testing with **Playwright**.
 
 - **Naming Convention**: `[context]-[element-type]-[identifier]`
 - **Dynamic IDs**: Support for parameterized identifiers (e.g., `globals-table-row-${key}`)
-- **Centralized Management**: All test IDs defined in `src/utils/test-helpers.ts`
+- **Centralized Management**: All test IDs defined in `e2e/test-helpers.ts`
 
 #### Key Test IDs
 
@@ -123,7 +123,7 @@ The application is fully prepared for end-to-end testing with **Playwright**.
 Use the test helper functions for consistent test development:
 
 ```typescript
-import {testIds, selectors, testPatterns} from '@/utils/test-helpers';
+import {testIds, selectors, testPatterns} from './test-helpers';
 
 // Basic usage
 await page.click(selectors.byTestId(testIds.globals.buttonAdd));

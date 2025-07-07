@@ -154,6 +154,7 @@ export const getDynamicTestId = (
  * Use these in your Playwright tests for consistent element targeting
  */
 export const selectors = {
+  byClassName: (className: string) => `.${className}`,
   byTestId: (testId: string) => `[data-testid="${testId}"]`,
   byTestIdContains: (testId: string) => `[data-testid*="${testId}"]`,
   byTestIdStartsWith: (testId: string) => `[data-testid^="${testId}"]`,
@@ -177,3 +178,17 @@ export const testPatterns = {
   waitForToast: (toastType: 'success' | 'error', action: string) =>
     selectors.byTestId(`globals-toast-${action}-${toastType}`),
 } as const;
+
+export function pathname(path: string) {
+  // Remove any trailing slash from base, and ensure path has a leading slash
+  // so that `pathname('/foo')` and `pathname('foo/')` both work as expected.
+  const base = 'http://localhost:3001';
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  // Remove trailing slash from base if present, and remove trailing slash from path (except for root)
+  const baseNoSlash = base.endsWith('/') ? base.slice(0, -1) : base;
+  const pathNoTrailing =
+    normalizedPath.length > 1 && normalizedPath.endsWith('/')
+      ? normalizedPath.slice(0, -1)
+      : normalizedPath;
+  return `${baseNoSlash}${pathNoTrailing}`;
+}
