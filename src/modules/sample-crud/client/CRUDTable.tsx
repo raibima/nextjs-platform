@@ -14,6 +14,7 @@ import {deleteGlobalAction} from '../action/CRUDPageAction';
 import {useTransition} from 'react';
 import {toast} from 'sonner';
 import {GlobalDto} from '../model/Global';
+import {useRouter} from 'next/navigation';
 
 interface CRUDTableProps {
   globals: GlobalDto[];
@@ -22,19 +23,21 @@ interface CRUDTableProps {
 
 export function CRUDTable({globals, onEdit}: CRUDTableProps) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleDelete = (key: string) => {
     startTransition(async () => {
       try {
         await deleteGlobalAction(key);
         toast.success('Global deleted successfully', {
-          id: 'globals-toast-delete-success',
+          className: 'globals-toast-delete-success',
         });
+        router.refresh();
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : 'Failed to delete global',
           {
-            id: 'globals-toast-delete-error',
+            className: 'globals-toast-delete-error',
           },
         );
       }
