@@ -8,6 +8,6 @@ export default defineConfig({
     url: process.env.DATABASE_URL as string,
   },
   dialect: 'postgresql',
-  schema: './src/lib/db-schema.ts',
+  schema: './src/core/db-schema.ts',
   out: './drizzle',
 });
