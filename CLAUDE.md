@@ -41,6 +41,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **src/components/**: shadcn/ui components and utilities
 - **src/app/**: Next.js App Router pages and layouts
 
+### Component Architecture
+
+- **src/components/** is strictly for UI (design system-level) components only
+- Page / feature-level UI should live inside either:
+  - The page.tsx itself (server components)
+  - src/modules/[feature]/client (client components)
+
 ### Database Layer
 
 - Uses Drizzle ORM with PostgreSQL
