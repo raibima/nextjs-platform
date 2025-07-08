@@ -148,9 +148,43 @@ This project follows a domain-driven architecture where features are organized i
 
 Each module in `src/modules/` contains:
 
-- **`model/`**: Database operations and business logic
-- **`action/`**: Server actions for Next.js App Router
+- **`model/`**: Database operations and business logic following specific patterns
+- **`action/`**: Server actions for Next.js App Router and business logic
 - **`client/`**: Client-side components and hooks
+
+#### Model Layer Requirements
+
+Models must follow these patterns:
+
+1. **DTO Interface**: Export an interface defining the data structure
+2. **Database Functions**: Export async functions that operate on the DTO
+3. **No Classes**: Use functional approach, not class-based models
+
+#### Model Function Patterns
+
+- Use async/await for all database operations
+- Return DTOs or null for single record queries
+- Return arrays of DTOs for list queries
+- Use void return type for delete operations
+- All functions must be exported for reuse
+
+#### Action Layer Requirements
+
+Server actions must follow these patterns:
+
+1. **'use server' directive**: All action files must start with `'use server';`
+2. **Import model functions**: Use model layer functions for database operations
+3. **Export async functions**: All actions must be exported async functions
+4. **Business logic validation**: Handle validation and business rules before calling model functions
+
+#### Error Handling in Actions
+
+**Important patterns**:
+
+- Use try-catch blocks but **do not throw errors** (React rewrites error messages for security)
+- Return values that indicate errors instead of throwing
+- Client components should check return values and handle errors accordingly
+- **Note**: Next.js APIs like `redirect` and `notFound` cannot be used inside try-catch blocks
 
 ### Example Module
 

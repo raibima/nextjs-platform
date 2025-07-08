@@ -52,9 +52,100 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 The project follows a module-based architecture:
 
-- **Model layer**: Database operations and business logic (e.g., `Global.ts`)
-- **Action layer**: Server actions for form handling (e.g., `GlobalPageAction.ts`)
+- **Model layer**: Database operations and business logic following specific patterns
+- **Action layer**: Server actions for form handling and business logic (e.g., `CRUDPageAction.ts`)
 - **Client layer**: Client-side components and hooks
+
+#### Model Layer Requirements
+
+A "model" must have:
+
+1. **A DTO (Data Transfer Object) interface** that defines the structure of the data (exported)
+2. **Functions to interact with the database** which operate on the DTO (exported)
+
+**Important**: Do NOT use classes for models. Use functional approach with exported interfaces and functions.
+
+#### Example Model Structure (`Global.ts`)
+
+```typescript
+// DTO Interface
+export interface GlobalDto {
+  key: string;
+  value: string;
+}
+
+// Database functions
+export async function getGlobalByKey(key: string): Promise<GlobalDto | null>;
+export async function createGlobal(
+  key: string,
+  value: string,
+): Promise<GlobalDto>;
+export async function getAllGlobals(): Promise<GlobalDto[]>;
+export async function updateGlobal(
+  key: string,
+  value: string,
+): Promise<GlobalDto>;
+export async function deleteGlobal(key: string): Promise<void>;
+```
+
+**Model Function Patterns**:
+
+- Use async/await for all database operations
+- Return DTOs or null for single record queries
+- Return arrays of DTOs for list queries
+- Use void return type for delete operations
+- All functions should be exported for reuse
+
+#### Action Layer Requirements
+
+Server actions must follow these patterns:
+
+1. **'use server' directive**: All action files must start with `'use server';`
+2. **Import model functions**: Use model layer functions for database operations
+3. **Export async functions**: All actions must be exported async functions
+4. **Business logic validation**: Handle validation and business rules before calling model functions
+
+#### Error Handling in Actions
+
+**Important patterns for error handling**:
+
+- Use try-catch blocks to catch errors but **do not throw them**
+- React rewrites error messages for security reasons
+- Return values that indicate errors (e.g., `null` or objects with `error` property)
+- Client components should check return values and handle errors accordingly
+- **Note**: Next.js APIs like `redirect` and `notFound` cannot be used inside try-catch blocks
+
+#### Example Action Structure (`CRUDPageAction.ts`)
+
+```typescript
+'use server';
+
+import {
+  createGlobal,
+  deleteGlobal,
+  updateGlobal,
+  getGlobalByKey,
+} from '../model/Global';
+
+export async function addGlobalAction(key: string, value: string) {
+  // Business logic validation
+  const existingGlobal = await getGlobalByKey(key);
+  if (existingGlobal) {
+    throw new Error(`A global with key "${key}" already exists`);
+  }
+
+  // Call model function
+  await createGlobal(key, value);
+}
+
+export async function updateGlobalAction(key: string, value: string) {
+  await updateGlobal(key, value);
+}
+
+export async function deleteGlobalAction(key: string) {
+  await deleteGlobal(key);
+}
+```
 
 ### Authentication
 
