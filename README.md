@@ -15,10 +15,10 @@ A modern, extensible Next.js starter platform with authentication, a comprehensi
 - **Database**: Integrated with [Drizzle ORM](https://orm.drizzle.team/) and PostgreSQL for type-safe database access.
 - **Module Architecture**: Domain-driven design with separate model, action, and client layers.
 - **E2E Testing**: Comprehensive end-to-end testing with Playwright and centralized test ID management.
+- **Unit Testing**: Comprehensive unit testing with Jest and Testing Library.
 - **Planned**:
   - Internationalization (i18n)
   - AI SDK
-  - Unit test
 
 ---
 
@@ -61,6 +61,14 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 ```sh
 bun run lint      # Lint code
 bun run format    # Format code with Prettier
+```
+
+### 5. Run tests
+
+```sh
+bun run test         # Run unit tests with Jest
+bun run test:watch   # Run unit tests in watch mode
+bun run test:e2e     # Run end-to-end tests with Playwright
 ```
 
 ---
@@ -203,6 +211,28 @@ src/modules/sample-crud/
 ---
 
 ## Testing
+
+### Unit Testing
+
+This project includes comprehensive unit testing with Jest and Testing Library:
+
+- **Jest**: Delightful JavaScript testing framework with a focus on simplicity
+- **Testing Library**: Simple and complete testing utilities that encourage good testing practices
+- **DOM Testing**: jsdom environment for testing DOM elements and interactions
+- **Code Coverage**: Built-in code coverage reporting with V8 coverage provider
+
+#### Running Unit Tests
+
+```bash
+# Run all tests
+bun run test
+
+# Run tests in watch mode
+bun run test:watch
+
+# Run specific test file
+bun run test -- src/modules/sample-crud/client/CRUDForm.test.tsx
+```
 
 ### End-to-End Testing
 

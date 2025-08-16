@@ -20,6 +20,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Testing Commands
 
+- `bun run test` - Run all unit tests with Jest
+- `bun run test:watch` - Run unit tests in watch mode
 - `bunx playwright test` - Run all E2E tests
 - `bunx playwright test --ui` - Run tests with Playwright UI
 - `bunx playwright test e2e/sample-crud.spec.ts` - Run specific test file
@@ -278,10 +280,63 @@ bunx playwright codegen http://localhost:3000
 
 ### Unit Testing
 
-Currently planned but not implemented:
+The application now includes unit testing with **Jest** and **Testing Library**.
 
-- Component unit tests
-- Utility function tests
+#### Configuration
+
+- Jest configuration in `jest.config.ts`
+- Testing Library configured in `jest.setup.ts`
+- Test environment set to `jsdom` for React component testing
+- Code coverage collection enabled
+- TypeScript path mapping configured (`@/*` to `src/*`)
+
+#### Running Tests
+
+```bash
+# Run all unit tests
+bun run test
+
+# Run unit tests in watch mode
+bun run test:watch
+```
+
+#### Test File Structure
+
+Unit tests should be placed next to the files they test with either:
+
+- `[filename].test.ts` for utility functions
+- `[filename].test.tsx` for React components
+
+Example:
+
+```
+src/
+  components/
+    Button.tsx
+    Button.test.tsx
+  utils/
+    formatDate.ts
+    formatDate.test.ts
+```
+
+#### Writing Tests
+
+The project is configured with Testing Library for React component testing and Jest DOM matchers:
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import Button from './Button';
+
+test('renders button with correct text', () => {
+  render(<Button>Click me</Button>);
+  expect(screen.getByText('Click me')).toBeInTheDocument();
+});
+```
+
+#### Code Coverage
+
+Jest is configured to collect code coverage information. After running tests, coverage reports are generated in the `coverage/` directory.
 
 ## Development Workflow
 
